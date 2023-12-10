@@ -86,6 +86,7 @@ Manajemen Proyek
                             <td>
                                 <a href="<?= url_to('adminShowProyek', $data->id); ?>" class="btn btn-info"><i class="fas fa-eye"></i></a>
                                 <a href="<?= url_to('adminEditProyek', $data->id); ?>" class="btn btn-warning"><i class="fas fa-edit"></i></a>
+                                <a href="<?= url_to('adminPdfProyek', $data->id); ?>" target="_blank" class="btn btn-warning"><i class="fas fa-file-pdf"></i></a>
                                 <a href="<?= url_to('adminDeleteProyek', $data->id); ?>" class="btn btn-danger" onclick="return confirm('Apakah Anda Yakin ingin menghapus data User ?')"><i class="fas fa-trash"></i></a>
                             </td>
                         </tr>

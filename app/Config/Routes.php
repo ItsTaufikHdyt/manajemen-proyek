@@ -37,6 +37,7 @@ $routes->group('admin', ['filter' => 'admin'], static function ($routes) {
     $routes->get('proyek/show/(:any)', 'Admin::showProyek/$1',['as'=>'adminShowProyek']);
     $routes->post('proyek/store', 'Admin::storeProyek',['as'=>'adminStoreProyek']);
     $routes->get('proyek/edit/(:any)', 'Admin::editProyek/$1',['as'=>'adminEditProyek']);
+    $routes->get('proyek/pdf/(:any)', 'Admin::pdfProyek/$1',['as'=>'adminPdfProyek']);
     $routes->post('proyek/update/(:any)', 'Admin::updateProyek/$1',['as'=>'adminUpdateProyek']);
     $routes->get('proyek/delete/(:any)', 'Admin::deleteProyek/$1',['as'=>'adminDeleteProyek']);
 

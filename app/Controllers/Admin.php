@@ -7,6 +7,8 @@ use App\Models\UsersModel;
 use App\Models\KaryawanModel;
 use App\Models\ProyekKaryawanModel;
 use App\Models\ProyekModel;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 // use PhpOffice\PhpSpreadsheet\Spreadsheet;
 // use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -291,7 +293,7 @@ class Admin extends BaseController
             foreach ($dataKaryawan as $data) {
                 $this->proyekKaryawan->delete($data->id);
             }
-            
+
             foreach ($karyawan as $data) {
                 $this->proyekKaryawan->insert([
                     'id_proyek' => $id,
@@ -309,6 +311,21 @@ class Admin extends BaseController
         return redirect()->to(url_to('adminDashboard'));
     }
 
+    public function pdfProyek($id)
+    {
+
+        $dompdf = new Dompdf(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
+        $dataProyek = $this->proyek->find($id);
+        $dataKaryawan = $this->proyekKaryawan->select('*')->join('karyawan', 'proyek_karyawan.id_karyawan = karyawan.id')->where('id_proyek', $id)->get()->getResult();
+        $data = [
+            'proyek' => $dataProyek,
+            'karyawan' => $dataKaryawan,
+        ];
+        $dompdf->loadHtml(view('admin/proyek/report', $data));
+        $dompdf->setPaper('a4', 'potrait');
+        $dompdf->render();
+        $dompdf->stream('resume.pdf', ['Attachment' => 0]);
+    }
     public function user()
     {
         $user = new UsersModel();
