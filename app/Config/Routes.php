@@ -41,6 +41,14 @@ $routes->group('admin', ['filter' => 'admin'], static function ($routes) {
     $routes->post('proyek/update/(:any)', 'Admin::updateProyek/$1',['as'=>'adminUpdateProyek']);
     $routes->get('proyek/delete/(:any)', 'Admin::deleteProyek/$1',['as'=>'adminDeleteProyek']);
 
+    $routes->get('dashboard2', 'Admin::barang',['as'=>'adminBarangDashboard']);
+    $routes->get('barang/add', 'Admin::addBarang',['as'=>'adminAddBarang']);
+    $routes->get('barang/show/(:any)', 'Admin::showBarang/$1',['as'=>'adminShowBarang']);
+    $routes->post('barang/store', 'Admin::storeBarang',['as'=>'adminStoreBarang']);
+    $routes->get('barang/edit/(:any)', 'Admin::editBarang/$1',['as'=>'adminEditBarang']);
+    $routes->post('barang/update/(:any)', 'Admin::updateBarang/$1',['as'=>'adminUpdateBarang']);
+    $routes->get('barang/delete/(:any)', 'Admin::deleteBarang/$1',['as'=>'adminDeleteBarang']);
+
     $routes->get('user', 'Admin::user',['as'=>'adminUser']);
     $routes->get('user/add', 'Admin::addUser',['as'=>'adminAddUser']);
     $routes->post('user/store', 'Admin::storeUser',['as'=>'adminStoreUser']);
@@ -55,6 +63,7 @@ $routes->group('admin', ['filter' => 'admin'], static function ($routes) {
     $routes->post('karyawan/update/(:any)', 'Admin::updateKaryawan/$1',['as'=>'adminUpdateKaryawan']);
     $routes->get('karyawan/delete/(:any)', 'Admin::deleteKaryawan/$1',['as'=>'adminDeleteKaryawan']);
 
+    
     // $routes->post('hazard/report', 'Admin::exportHazardExcel',['as'=>'exportHazardExcel']);
 
 });

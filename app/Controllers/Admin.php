@@ -7,6 +7,7 @@ use App\Models\UsersModel;
 use App\Models\KaryawanModel;
 use App\Models\ProyekKaryawanModel;
 use App\Models\ProyekModel;
+use App\Models\BarangModel;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
@@ -22,6 +23,7 @@ class Admin extends BaseController
         $this->user = new UsersModel();
         $this->karyawan = new KaryawanModel();
         $this->proyek = new ProyekModel();
+        $this->barang = new BarangModel();
         $this->proyekKaryawan = new ProyekKaryawanModel();
         $this->db = \Config\Database::connect();
     }
@@ -40,6 +42,124 @@ class Admin extends BaseController
         echo view('admin/dashboard', $data);
     }
 
+    // ------------------- Barang -------------------
+    public function barang()
+    {
+        $barang = new BarangModel();
+        $data = [
+            'datax' => $barang->paginate(10),
+            'pager' => $barang->pager,
+            'dalamproses' => $this->barang->where(["status" => 1])->countAllResults(),
+            'selesai' => $this->barang->where(["status" => 2])->countAllResults(),
+        ];
+        echo view('admin/dashboard2', $data);
+    }
+
+    public function addBarang()
+    {
+        echo view('admin/barang/add');
+    }
+    public function storeBarang()
+    {
+        if (!$this->validate(
+            [
+
+                'nama' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Nama Barang field can not be blank value'
+                    ]
+                ],
+                'ket' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Keterangan Masuk/keluar field can not be blank value'
+                    ]
+                ],
+                'jumlah' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Jumlah field can not be blank value'
+                    ]
+                ],
+                'status' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Status field can not be blank value'
+                    ]
+                ],
+            ]
+        )) {
+            session()->setFlashdata('error', $this->validator->listErrors());
+            return redirect()->back()->withInput();
+        };
+
+
+        $this->barang->insert([
+            'nama' => $this->request->getVar('nama'),
+            'ket' => $this->request->getVar('ket'),
+            'jumlah' => $this->request->getVar('jumlah'),
+            'status' => $this->request->getVar('status'),
+        ]);
+
+
+        return redirect()->to(url_to('adminBarangDashboard'));
+    }
+    public function editBarang($id)
+    {
+        echo view('admin/barang/edit', ['barang' => $this->barang->find($id)]);
+    }
+    public function updateBarang($id)
+    {
+
+        if (!$this->validate(
+            [
+
+                'nama' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Nama Barang field can not be blank value'
+                    ]
+                ],
+                'ket' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Keterangan Masuk/keluar field can not be blank value'
+                    ]
+                ],
+                'jumlah' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Jumlah field can not be blank value'
+                    ]
+                ],
+                'status' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Status field can not be blank value'
+                    ]
+                ],
+            ]
+        )) {
+            session()->setFlashdata('error', $this->validator->listErrors());
+            return redirect()->back()->withInput();
+        };
+        $this->barang->update($id, [
+            'nama' => $this->request->getVar('nama'),
+            'ket' => $this->request->getVar('ket'),
+            'jumlah' => $this->request->getVar('jumlah'),
+            'status' => $this->request->getVar('status'),
+        ]);
+
+        return redirect()->to(url_to('adminBarangDashboard'));
+    }
+    public function deleteBarang($id) {
+        $this->barang->delete($id);
+        return redirect()->to(url_to('adminBarangDashboard'));
+    }
+    // ------------------- Barang -------------------
+
+    // ------------------- Proyek -------------------
     public function addProyek()
     {
 
@@ -326,6 +446,9 @@ class Admin extends BaseController
         $dompdf->render();
         $dompdf->stream('resume.pdf', ['Attachment' => 0]);
     }
+    // ------------------- Proyek -------------------
+
+    // ------------------- User -------------------
     public function user()
     {
         $user = new UsersModel();
@@ -426,7 +549,9 @@ class Admin extends BaseController
         $this->user->delete($id);
         return redirect()->to(url_to('adminUser'));
     }
+    // ------------------- User -------------------
 
+    // ------------------- Karyawan -------------------
     public function karyawan()
     {
         $karyawan = new KaryawanModel();
@@ -612,4 +737,6 @@ class Admin extends BaseController
         $this->karyawan->delete($id);
         return redirect()->to(url_to('adminKaryawan'));
     }
+
+    // ------------------- karyawan -------------------
 }

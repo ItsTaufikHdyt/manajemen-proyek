@@ -14,7 +14,7 @@ Data User
     <div class="card">
         <div class="card-header">
 
-            <a href="<?= url_to('adminAddUser') ?>" class="btn btn-primary btn-sm">Add User</a>
+            <a href="<?= url_to('adminAddUser') ?>" class="btn btn-primary btn-sm">Tambah User</a>
         </div>
         <!-- /.card-header -->
         <div class="card-body table-responsive p-0" style="height: 300px;">

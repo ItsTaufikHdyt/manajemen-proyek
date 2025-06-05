@@ -23,21 +23,27 @@
                     <li class="nav-header">Manajemen Proyek</li>
                     <li class="nav-item">
                         <a href="<?= url_to('adminDashboard') ?>" class="nav-link">
-                            <i class="nav-icon fas fa-exclamation-triangle"></i>
-                            <p>Dashboard</p>
+                            <i class="nav-icon fas fa-gavel"></i>
+                            <p>Proyek</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="<?= url_to('adminBarangDashboard') ?>" class="nav-link">
+                            <i class="nav-icon fas fa-cube"></i>
+                            <p>Barang</p>
                         </a>
                     </li>
                     <li class="nav-header">Karyawan</li>
                     <li class="nav-item">
                         <a href="<?= url_to('adminKaryawan') ?>" class="nav-link">
-                            <i class="nav-icon fas fa-user"></i>
+                            <i class="nav-icon fas fa-users"></i>
                             <p>Data Karyawan</p>
                         </a>
                     </li>
                     <li class="nav-header">User</li>
                     <li class="nav-item">
                         <a href="<?= url_to('adminUser') ?>" class="nav-link">
-                            <i class="nav-icon fas fa-user"></i>
+                            <i class="nav-icon fas fa-id-badge"></i>
                             <p>Data User</p>
                         </a>
                     </li>

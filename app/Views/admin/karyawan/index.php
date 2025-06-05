@@ -13,7 +13,7 @@ Karyawan Report
 <div class="col-12">
     <div class="card">
         <div class="card-header">
-            <a href="<?= url_to('adminAddKaryawan') ?>" class="btn btn-primary btn-sm">Add Karyawan</a>
+            <a href="<?= url_to('adminAddKaryawan') ?>" class="btn btn-primary btn-sm">Tambah Karyawan</a>
         </div>
         <!-- /.card-header -->
         <div class="card-body table-responsive p-0" style="height: 300px;">
