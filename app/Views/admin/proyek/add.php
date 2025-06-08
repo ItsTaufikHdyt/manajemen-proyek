@@ -23,7 +23,7 @@ Add Manajemen Proyek
     <div class="card card-primary">
         <div class="card-header">
         </div>
-        <form action="<?= url_to('adminStoreProyek') ?>" method="post">
+        <form action="<?= url_to('adminStoreProyek') ?>" method="post" enctype="multipart/form-data">
             <?= csrf_field(); ?>
             <div class="card-body">
                 <div class="row">
@@ -98,6 +98,10 @@ Add Manajemen Proyek
                         <option value="2">On Progress</option>
                         <option value="3">Finished</option>
                     </select>
+                </div>
+                <div class="form-group">
+                    <label>Dokumen <font color="red">*pdf | 2 mb</font></label>
+                    <input type="file" class="form-control" name="file">
                 </div>
                 <!-- /.card-body -->
                 <div class="card-footer">

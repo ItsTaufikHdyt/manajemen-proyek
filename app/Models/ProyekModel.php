@@ -11,6 +11,6 @@ class ProyekModel extends Model
     protected $returnType = 'object';
     protected $useTimestamps = false; 
     protected $allowedFields    = ['judul','instansi','nama','kontak','alamat','kota','provinsi',
-    'desc','start','end','biaya','status'];
+    'desc','start','end','biaya','status','file'];
 
 }

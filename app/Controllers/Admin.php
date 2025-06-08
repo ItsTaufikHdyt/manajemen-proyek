@@ -153,7 +153,8 @@ class Admin extends BaseController
 
         return redirect()->to(url_to('adminBarangDashboard'));
     }
-    public function deleteBarang($id) {
+    public function deleteBarang($id)
+    {
         $this->barang->delete($id);
         return redirect()->to(url_to('adminBarangDashboard'));
     }
@@ -168,18 +169,6 @@ class Admin extends BaseController
         ];
         echo view('admin/proyek/add', $data);
     }
-
-    public function showProyek($id)
-    {
-        $dataProyek = $this->proyek->find($id);
-        $dataKaryawan = $this->proyekKaryawan->select('*')->join('karyawan', 'proyek_karyawan.id_karyawan = karyawan.id')->where('id_proyek', $id)->get()->getResult();
-        $data = [
-            'proyek' => $dataProyek,
-            'karyawan' => $dataKaryawan,
-        ];
-        echo view('admin/proyek/show', $data);
-    }
-
 
     public function storeProyek()
     {
@@ -258,6 +247,14 @@ class Admin extends BaseController
                         'required' => 'Status field can not be blank value'
                     ]
                 ],
+                'file' => [
+                    'rules' => 'mime_in[file,application/pdf]|max_size[file,2048]',
+                    'errors' => [
+                        'uploaded' => 'File field can not be blank value',
+                        'mime_in' => 'File must be a PDF',
+                        'max_size' => 'File size must not exceed 2MB'
+                    ]
+                ],
             ]
         )) {
             session()->setFlashdata('error', $this->validator->listErrors());
@@ -266,6 +263,15 @@ class Admin extends BaseController
 
         $biaya = str_replace(".", "", $this->request->getVar('biaya'));
         $karyawan = $this->request->getVar('karyawan');
+
+        $file = $this->request->getFile('file');
+        if ($file->isValid() && !$file->hasMoved()) {
+            $fileName = $file->getRandomName();
+            $file->move(FCPATH . 'uploads', $fileName); // FCPATH lebih aman
+        } else {
+            session()->setFlashdata('error', 'File tidak valid atau sudah dipindahkan.');
+            return redirect()->back()->withInput();
+        }
 
         $this->proyek->insert([
             'judul' => $this->request->getVar('judul'),
@@ -280,6 +286,7 @@ class Admin extends BaseController
             'end' => $this->request->getVar('end'),
             'biaya' => $biaya,
             'status' => $this->request->getVar('status'),
+            'file' => $fileName,
         ]);
 
 
@@ -292,6 +299,18 @@ class Admin extends BaseController
 
         return redirect()->to(url_to('adminDashboard'));
     }
+
+    public function showProyek($id)
+    {
+        $dataProyek = $this->proyek->find($id);
+        $dataKaryawan = $this->proyekKaryawan->select('*')->join('karyawan', 'proyek_karyawan.id_karyawan = karyawan.id')->where('id_proyek', $id)->get()->getResult();
+        $data = [
+            'proyek' => $dataProyek,
+            'karyawan' => $dataKaryawan,
+        ];
+        echo view('admin/proyek/show', $data);
+    }
+
 
     public function editProyek($id)
     {
@@ -383,6 +402,13 @@ class Admin extends BaseController
                         'required' => 'Status field can not be blank value'
                     ]
                 ],
+                'file' => [
+                    'rules' => 'mime_in[file,application/pdf]|max_size[file,2048]',
+                    'errors' => [
+                        'mime_in' => 'File harus berformat PDF.',
+                        'max_size' => 'Ukuran file maksimal 2MB.'
+                    ]
+                ],
             ]
         )) {
             session()->setFlashdata('error', $this->validator->listErrors());
@@ -391,6 +417,23 @@ class Admin extends BaseController
 
         $biaya = str_replace(".", "", $this->request->getVar('biaya'));
         $karyawan = $this->request->getVar('karyawan');
+
+        $proyek = $this->proyek->find($id);
+
+        // Handle file upload
+        $file = $this->request->getFile('file');
+        $fileName = $proyek->file; // Default file name (existing file)
+
+        if ($file->isValid() && !$file->hasMoved()) {
+            // Hapus file lama jika ada
+            if (!empty($proyek->file) && file_exists(FCPATH . 'uploads/' . $proyek->file)) {
+                unlink(FCPATH . 'uploads/' . $proyek->file);
+            }
+
+            // Upload file baru
+            $fileName = $file->getRandomName();
+            $file->move(FCPATH . 'uploads', $fileName);
+        }
 
         $this->proyek->update($id, [
             'judul' => $this->request->getVar('judul'),
@@ -405,6 +448,7 @@ class Admin extends BaseController
             'end' => $this->request->getVar('end'),
             'biaya' => $biaya,
             'status' => $this->request->getVar('status'),
+            'file' => $fileName,
         ]);
 
         if (!empty($karyawan)) {
@@ -427,6 +471,15 @@ class Admin extends BaseController
 
     public function deleteProyek($id)
     {
+        // Ambil data proyek berdasarkan ID
+        $proyek = $this->proyek->find($id);
+
+        // Hapus file jika ada
+        if (!empty($proyek->file) && file_exists(FCPATH . 'uploads/' . $proyek->file)) {
+            unlink(FCPATH . 'uploads/' . $proyek->file);
+        }
+
+        // Hapus data proyek dari database
         $this->proyek->delete($id);
         return redirect()->to(url_to('adminDashboard'));
     }
